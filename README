@@ -1,0 +1,6 @@
+voicebarf is a gateway between the Pentabarf, the open source conference
+planning software and Adhearsion, the Ruby framework for voice-enabled
+applications.
+
+It allows users to just dial a number to find out which talks are currently
+running where.

@@ -5,6 +5,20 @@ require 'hpricot'
 
 module HpricotAttributes
     def set_attributes_from_hpricot(h)
+        # sets attributes (instance variables) from a given Hpricot element
+        # if the corresponding XML looks like this, for example:
+        # <conference>
+        #   <title>26th Chaos Communication Congress</title>
+        #   <subtitle>Here be dragons</subtitle>
+        #   <venue>bcc - Berliner Congress Center</venue>
+        # </conference>
+        # the method sets @title, @subtitle and @venue correspondingly
+        if h.class != Hpricot::Elem then
+            raise ArgumentError, 'parameter needs to be an Hpricot::Elem'
+        end
+        if ! h.respond_to? 'children' then
+            raise ArgumentError, 'parameter needs to have children'
+        end
         h.children.select { |c| c.class == Hpricot::Elem }.each do |c|
             self.instance_variable_set "@#{c.name}".to_sym, c.inner_text
         end

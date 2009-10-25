@@ -53,9 +53,7 @@ module Pentabarf
                     @events.push(Event.new(:event => event, :date => date))
                 end
             end
-#            @events.each { |e| puts e.class }
-#            @events.sort! # FIXME
-#            puts @events.inspect
+            @events.sort!
         end
     end
     
@@ -68,8 +66,8 @@ module Pentabarf
 
         def initialize(args)
             event = args[:event]
-            @id = event.attributes['id']
-            date  = args[:date]
+            @id   = event.attributes['id']
+            @date = args[:date]
             set_attributes_from_hpricot(event)
             # persons need to be dealt with separately
             @persons = []

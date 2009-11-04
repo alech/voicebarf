@@ -160,7 +160,7 @@ end
 conf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
                                  :fallback => 'sample_schedule.xml')
 
-puts conf.current_block(Time.now).inspect
+puts conf.current_block.inspect
 puts conf.current_block(Time.parse("2009-12-27 10:00")).inspect
 puts conf.current_block(Time.parse("2009-12-27 20:30")).inspect
 

@@ -157,16 +157,16 @@ module Pentabarf
     end
 end
 
-conf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
-                                 :fallback => 'sample_schedule.xml')
-
-puts conf.current_block.inspect
-puts conf.current_block(Time.parse("2009-12-27 10:00")).inspect
-puts conf.current_block(Time.parse("2009-12-27 20:30")).inspect
-
-puts conf.upcoming_block(Time.now).inspect
-conf.upcoming_block(Time.parse("2009-12-27 09:50")).each do |e|
-    puts e.title
-    puts e.subtitle
-    puts e.to_filename('gsm')
-end
+#conf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
+#                                 :fallback => 'sample_schedule.xml')
+#
+#puts conf.current_block.inspect
+#puts conf.current_block(Time.parse("2009-12-27 10:00")).inspect
+#puts conf.current_block(Time.parse("2009-12-27 20:30")).inspect
+#
+#puts conf.upcoming_block(Time.now).inspect
+#conf.upcoming_block(Time.parse("2009-12-27 09:50")).each do |e|
+#    puts e.title
+#    puts e.subtitle
+#    puts e.to_filename('gsm')
+#end

@@ -6,3 +6,8 @@ create table reminders (
   time varchar(14)
 );
 
+drop table if exists calls;
+create table calls (
+    caller_id varchar(100),
+    time varchar(14)
+);

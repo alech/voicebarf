@@ -1,8 +1,19 @@
 adhearsion {
+    sleep 0.5
+    ::Call.create(:caller_id => callerid, 
+                  :time => Time.now.strftime('%Y%m%d%H%M%S'))
     +talks_now
 }
 
 talks_now {
+    calls = ::Call.count(:conditions => { :caller_id => callerid })
+    puts @@pentabarf.title
+    if calls > 1 then
+        # if caller has called before, use the shortened event name
+        play "voicebarf/event/eventname-shortened"
+    else
+        play "voicebarf/event/eventname"
+    end
     # play event name (shortened if caller has called before)
     # Talks currently running
     # find matching talks and iterate over them

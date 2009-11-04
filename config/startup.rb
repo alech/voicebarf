@@ -2,6 +2,7 @@ require 'rubygems'
 require 'active_record'
 require 'yaml'
 require 'logger'
+require 'pentabarf'
 
 unless defined? Adhearsion
   if File.exists? File.dirname(__FILE__) + "/../adhearsion/lib/adhearsion.rb"
@@ -14,7 +15,7 @@ unless defined? Adhearsion
 end
 
 Adhearsion::Configuration.configure do |config|
-  config.logging :level => :info
+  config.logging :level => :debug
   config.enable_asterisk
 end
 
@@ -26,3 +27,8 @@ ActiveRecord::Base.logger = Logger.new(STDERR)
 
 class Reminder < ActiveRecord::Base
 end
+
+class Call < ActiveRecord::Base
+end
+@@pentabarf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
+                                 :fallback => 'sample_schedule.xml')

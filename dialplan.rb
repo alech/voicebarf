@@ -1,31 +1,27 @@
 adhearsion {
     sleep 0.5
+    # record caller in the database
     ::Call.create(:caller_id => callerid, 
                   :time => Time.now.strftime('%Y%m%d%H%M%S'))
+    play_eventname
     +talks_now
 }
 
 talks_now {
-    calls = ::Call.count(:conditions => { :caller_id => callerid })
-    puts @@pentabarf.title
-    if calls > 1 then
-        # if caller has called before, use the shortened event name
-        play "voicebarf/event/eventname-shortened"
-    else
-        play "voicebarf/event/eventname"
-    end
-    # play event name (shortened if caller has called before)
+    play 'voicebarf/generic/talks-currently-running'
     # Talks currently running
     # find matching talks and iterate over them
     # TODO record "started at" 
     #   talk.title, talk.subtitle by talk.speakers started at time in lecture hall x
     #   To rate the talk "in lecture hall 1", press 1 ...
     # For earlier talks, press 0
+    @@pentabarf.current_block.each do |event|
+        puts event.inspect
+    end
     +upcoming_talks
 }
 
 upcoming_talks {
-    # play event name (shortened if caller has called before)
     # Upcoming talks
     # find matching talks and iterate over them
     #   talk.title, talk.subtitle by talk.speakers starting at time in lecture hall x

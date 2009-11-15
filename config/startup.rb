@@ -3,6 +3,7 @@ require 'active_record'
 require 'yaml'
 require 'logger'
 require 'pentabarf'
+require 'time'
 
 unless defined? Adhearsion
   if File.exists? File.dirname(__FILE__) + "/../adhearsion/lib/adhearsion.rb"
@@ -20,8 +21,8 @@ Adhearsion::Configuration.configure do |config|
 end
 
 Adhearsion::Initializer.start_from_init_file(__FILE__, File.dirname(__FILE__) + "/..")
-@@config = File.open('voicebarf.cfg') { |f| YAML::load(f) }
-db_config = @@config['database']
+@@voicebarf_config = File.open('voicebarf.cfg') { |f| YAML::load(f) }
+db_config = @@voicebarf_config['database']
 
 ActiveRecord::Base.establish_connection(db_config)
 ActiveRecord::Base.logger = Logger.new(STDERR)

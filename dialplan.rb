@@ -9,13 +9,23 @@ adhearsion {
 
 talks_now {
     play 'voicebarf/generic/talks-currently-running'
+    time = Time.now
+
+    # in debug mode, ask for date and time (format YYYYMMDDHHMM)
+    if @@voicebarf_config['debug'] then
+        play 'voicebarf/generic/debug/debug-mode'
+        time_input = input(12, :timeout => 10.seconds,
+                               :play => [ 'voicebarf/generic/debug/please-enter-date-and-time' ])
+        time = Time.parse(time_input)
+    end
+
     # Talks currently running
     # find matching talks and iterate over them
     # TODO record "started at" 
     #   talk.title, talk.subtitle by talk.speakers started at time in lecture hall x
     #   To rate the talk "in lecture hall 1", press 1 ...
     # For earlier talks, press 0
-    @@pentabarf.current_block.each do |event|
+    @@pentabarf.current_block(time).each do |event|
         puts event.inspect
     end
     +upcoming_talks

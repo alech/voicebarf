@@ -20,7 +20,8 @@ Adhearsion::Configuration.configure do |config|
 end
 
 Adhearsion::Initializer.start_from_init_file(__FILE__, File.dirname(__FILE__) + "/..")
-db_config = File.open('database.cfg') { |f| YAML::load(f) }
+@@config = File.open('voicebarf.cfg') { |f| YAML::load(f) }
+db_config = @@config['database']
 
 ActiveRecord::Base.establish_connection(db_config)
 ActiveRecord::Base.logger = Logger.new(STDERR)

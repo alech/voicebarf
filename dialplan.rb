@@ -27,6 +27,37 @@ talks_now {
     # For earlier talks, press 0
     @@pentabarf.current_block(time).each do |event|
         puts event.inspect
+        puts event.to_filename('wav')
+        if File.exists?(File.join(
+            @@voicebarf_config['asterisk_sounds'],
+            'voicebarf', 'event', 'title',
+            event.to_filename('wav')
+        )) then
+            play 'voicebarf/event/title/' + event.to_filename('wav')
+        else
+            play 'voicebarf/generic/unnamed-event' # TODO: record
+        end
+        play 'voicebarf/event/subtitle/' + event.to_filename('wav')
+        play 'voicebarf/generic/by'
+        event.persons.each_with_index do |person, i|
+            puts person.inspect
+            # John Doe, Jane Doe and Foo Bar
+            if i < event.persons.size - 1 then
+                sleep 0.5 # a short pause to indicate a comma
+            elsif event.persons.size > 1
+                # before the last one, say "and"
+                play 'voicebarf/generic/and'
+                sleep 0.3
+            end
+            if File.exists?(File.join(
+                @@voicebarf_config['asterisk_sounds'],
+                    'voicebarf', 'speaker', "#{person.id}.wav"
+            )) then
+                play "voicebarf/speaker/#{person.id}.wav"
+            else
+                play 'voicebarf/generic/unnamed-person' # TODO: record
+            end
+        end
     end
     +upcoming_talks
 }

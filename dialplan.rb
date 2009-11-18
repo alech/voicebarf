@@ -3,7 +3,7 @@ adhearsion {
     # record caller in the database
     ::Call.create(:caller_id => callerid, 
                   :time => Time.now.strftime('%Y%m%d%H%M%S'))
-    play_eventname
+    play_conferencename
     +talks_now
 }
 

@@ -35,14 +35,14 @@ end
 @@pentabarf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
                                  :fallback => 'sample_schedule.xml')
 
-def play_eventname
+def play_conferencename
     calls = ::Call.count(:conditions => { :caller_id => callerid })
 
     # play event name (shortened if caller has called before)
     if calls > 1 then
         # if caller has called before, use the shortened event name
-        play "voicebarf/event/eventname-shortened"
+        play "voicebarf/conference/conferencename-shortened"
     else
-        play "voicebarf/event/eventname"
+        play "voicebarf/conference/conferencename"
     end
 end

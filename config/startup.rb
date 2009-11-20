@@ -32,8 +32,8 @@ end
 
 class Call < ActiveRecord::Base
 end
-@@pentabarf = Pentabarf::Conference.new(:uri => 'http://fwef8uwe9fw',
-                                 :fallback => 'sample_schedule.xml')
+@@pentabarf = Pentabarf::Conference.new(:uri => @@voicebarf_config['pentabarf_xml_uri'],
+                                 :fallback => @@voicebarf_config['pentabarf_xml_file'])
 
 def play_conferencename
     calls = ::Call.count(:conditions => { :caller_id => callerid })

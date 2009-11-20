@@ -48,31 +48,32 @@ def play_conferencename
 end
 
 def play_event(event)
-    # TODO record "started at" 
     #   talk.title, talk.subtitle by talk.speakers started at time
     #   in lecture hall x
     #   To rate the talk "in lecture hall 1", press 1 ...
     # For earlier talks, press 0
     #puts event.inspect
     #puts event.to_filename('wav')
-    play_title(event)
-    play_subtitle(event)
+    play_event_title event
+    play_event_subtitle event
     play 'voicebarf/generic/by'
-    play_persons(event)
+    play_event_persons event
+    play 'voicebarf/generic/starting-at' # TODO record 'started at'
+    play_event_time event
 end
 
-def play_title(event)
+def play_event_title(event)
     play_with_fallback("voicebarf/event/title/#{event.title_id_hash}.wav",
                        'voicebarf/generic/unnamed-event')
 end
 
-def play_subtitle(event)
+def play_event_subtitle(event)
     play_with_fallback("voicebarf/event/subtitle/" +
                        "#{event.subtitle_id_hash}.wav",
                        '')
 end
 
-def play_persons(event)
+def play_event_persons(event)
     event.persons.each_with_index do |person, i|
         # John Doe, Jane Doe and Foo Bar
         if i < event.persons.size - 1 then
@@ -88,9 +89,11 @@ def play_persons(event)
 end
 
 def play_with_fallback(file, fallback)
+    file_without_extension = file.sub('.wav', '')
+    ahn_log.voicebarf.debug "file without extension #{file_without_extension}"
     if File.exists?(File.join @@voicebarf_config['asterisk_sounds'], file)
         then
-        play file
+        play file_without_extension
     else
         # TODO record fallback files
         ahn_log.voicebarf.warn "falling back for file #{file} to #{fallback}"
@@ -98,3 +101,23 @@ def play_with_fallback(file, fallback)
     end
 end
 
+def play_event_time(event)
+    hour    = event.start.strftime("%02H")
+    minutes = event.start.strftime("%02M")
+    am_pm   = hour.to_i >= 12 ? "pm" : "am"
+    # special "named" points in time
+    if hour == "00" && minutes == "00" then
+        play "voicebarf/generic/time/midnight"
+    elsif hour == "12" && minutes == "00" then
+        play "voicebarf/generic/time/noon"
+    elsif hour == "17" && minutes == "00" then
+        play "voicebarf/generic/time/teatime"
+    else
+        # hour minute am/pm
+        play "voicebarf/generic/time/hours/#{hour}"
+        # TODO record 'something'
+        play_with_fallback("voicebarf/generic/time/minutes/#{minutes}.wav",
+                           'voicebarf/generic/time/minutes/something')
+        play "voicebarf/generic/time/#{am_pm}"
+    end 
+end

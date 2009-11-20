@@ -46,3 +46,55 @@ def play_conferencename
         play "voicebarf/conference/conferencename"
     end
 end
+
+def play_event(event)
+    # TODO record "started at" 
+    #   talk.title, talk.subtitle by talk.speakers started at time
+    #   in lecture hall x
+    #   To rate the talk "in lecture hall 1", press 1 ...
+    # For earlier talks, press 0
+    #puts event.inspect
+    #puts event.to_filename('wav')
+    play_title(event)
+    play_subtitle(event)
+    play 'voicebarf/generic/by'
+    play_persons(event)
+end
+
+def play_title(event)
+    play_with_fallback("voicebarf/event/title/#{event.title_id_hash}.wav",
+                       'voicebarf/generic/unnamed-event')
+end
+
+def play_subtitle(event)
+    play_with_fallback("voicebarf/event/subtitle/" +
+                       "#{event.subtitle_id_hash}.wav",
+                       '')
+end
+
+def play_persons(event)
+    event.persons.each_with_index do |person, i|
+        # John Doe, Jane Doe and Foo Bar
+        if i < event.persons.size - 1 then
+            sleep 0.5 # a short pause to indicate a comma
+        elsif event.persons.size > 1
+            # before the last one, say "and"
+            play 'voicebarf/generic/and'
+            sleep 0.3
+        end
+        play_with_fallback("voicebarf/speaker/#{person.id_hash}.wav",
+                           'voicebarf/generic/unnamed-person')
+    end
+end
+
+def play_with_fallback(file, fallback)
+    if File.exists?(File.join @@voicebarf_config['asterisk_sounds'], file)
+        then
+        play file
+    else
+        # TODO record fallback files
+        STDERR.puts "warning - falling back for file #{file} to #{fallback}"
+        play fallback
+    end
+end
+

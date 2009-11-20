@@ -134,11 +134,20 @@ module Pentabarf
             self.room <=> other.room
         end
 
-        def to_filename(extension)
-            # add a hash over title and subtitle, as we might need to
+        def title_id_hash
+            id_hash(@title)
+        end
+
+        def subtitle_id_hash
+            id_hash(@subtitle)
+        end
+
+        private
+        def id_hash(attribute)
+            # add a hash over attribute to the id, as we might need to
             # regenerate the file if that information changes
-            digest = Digest::SHA256.new().update(@title + @subtitle).to_s[1..10]
-            "#{@id}_#{digest}.#{extension}"
+            digest = Digest::SHA256.new().update(attribute).to_s[1..10]
+            "#{@id}_#{digest}"
         end
     end
 
@@ -150,9 +159,9 @@ module Pentabarf
             @name = name
         end
 
-        def to_filename(extension)
+        def id_hash
             digest = Digest::SHA256.new().update(@name).to_s[1..10]
-            "#{@id}_#{digest}.#{extension}"
+            "#{@id}_#{digest}"
         end
     end
 end

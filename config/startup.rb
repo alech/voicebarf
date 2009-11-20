@@ -93,7 +93,7 @@ def play_with_fallback(file, fallback)
         play file
     else
         # TODO record fallback files
-        STDERR.puts "warning - falling back for file #{file} to #{fallback}"
+        ahn_log.voicebarf.warn "falling back for file #{file} to #{fallback}"
         play fallback
     end
 end

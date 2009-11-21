@@ -21,11 +21,17 @@ talks_now {
 }
 
 upcoming_talks {
+    play 'voicebarf/generic/upcoming-talks'
+    time = Time.parse("200912281500")
+
     # Upcoming talks
     # find matching talks and iterate over them
     #   talk.title, talk.subtitle by talk.speakers starting at time in lecture hall x
     #   Press 1/2/3 to be reminded 5 minutes before the talk.
     # find next matching block and iterate over the talks (until user hangs up or fahrplan is empty) ...
+    COMPONENTS.voicebarf['pentabarf'].upcoming_block(time).each do |event|
+        play_event(event)
+    end
 }
 
 rate {

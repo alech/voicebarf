@@ -12,7 +12,7 @@ talks_now {
     time = Time.now
 
     # in debug mode, ask for date and time (format YYYYMMDDHHMM)
-    if @@voicebarf_config['debug'] then
+    if COMPONENTS.voicebarf['debug'] then
         play 'voicebarf/generic/debug/debug-mode'
         time_input = input(12, :timeout => 10.seconds,
                                :play => [ 'voicebarf/generic/debug/please-enter-date-and-time' ])
@@ -21,9 +21,10 @@ talks_now {
 
     # Talks currently running
     # find matching talks and iterate over them
-    @@pentabarf.current_block(time).each do |event|
+    COMPONENTS.voicebarf['pentabarf'].current_block(time).each do |event|
         play_event(event)
     end
+    sleep 1
     +upcoming_talks
 }
 

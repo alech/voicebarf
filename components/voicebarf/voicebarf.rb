@@ -111,4 +111,17 @@ methods_for :dialplan do
             play "voicebarf/generic/time/#{am_pm}"
         end 
     end
+
+    def get_time
+        time = Time.now
+
+        # in debug mode, ask for date and time (format YYYYMMDDHHMM)
+        if COMPONENTS.voicebarf['debug'] then
+            play 'voicebarf/generic/debug/debug-mode'
+            time_input = input(12, :timeout => 10.seconds,
+                                   :play => [ 'voicebarf/generic/debug/please-enter-date-and-time' ])
+            time = Time.parse(time_input)
+        end
+        time
+    end
 end

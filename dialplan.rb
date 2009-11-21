@@ -9,15 +9,7 @@ adhearsion {
 
 talks_now {
     play 'voicebarf/generic/talks-currently-running'
-    time = Time.now
-
-    # in debug mode, ask for date and time (format YYYYMMDDHHMM)
-    if COMPONENTS.voicebarf['debug'] then
-        play 'voicebarf/generic/debug/debug-mode'
-        time_input = input(12, :timeout => 10.seconds,
-                               :play => [ 'voicebarf/generic/debug/please-enter-date-and-time' ])
-        time = Time.parse(time_input)
-    end
+    time = get_time
 
     # Talks currently running
     # find matching talks and iterate over them

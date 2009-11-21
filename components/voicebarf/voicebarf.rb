@@ -95,6 +95,8 @@ methods_for :dialplan do
         hour    = event.start.strftime("%02H")
         minutes = event.start.strftime("%02M")
         am_pm   = hour.to_i >= 12 ? "pm" : "am"
+
+        hour_corrected = hour.to_i > 12 ? '%02d' % (hour.to_i - 12) : hour
         # special "named" points in time
         if hour == "00" && minutes == "00" then
             play "voicebarf/generic/time/midnight"
@@ -104,7 +106,7 @@ methods_for :dialplan do
             play "voicebarf/generic/time/teatime"
         else
             # hour minute am/pm
-            play "voicebarf/generic/time/hours/#{hour}"
+            play "voicebarf/generic/time/hours/#{hour_corrected}"
             # TODO record 'something'
             play_with_fallback("voicebarf/generic/time/minutes/#{minutes}.wav",
                                'voicebarf/generic/time/minutes/something')

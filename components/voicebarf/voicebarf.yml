@@ -5,5 +5,5 @@ database:
     database: reminders.sqlite
 debug: true
 asterisk_sounds: /usr/share/asterisk/sounds/
-pentabarf_xml_uri: http://foobar
-pentabarf_xml_file: 68.xml
+pentabarf_xml_uri: http://events.ccc.de/congress/2009/Fahrplan/schedule.en.xml
+pentabarf_xml_file: schedule.en.xml

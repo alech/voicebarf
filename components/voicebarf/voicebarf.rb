@@ -59,7 +59,7 @@ methods_for :dialplan do
 
     def play_event_title(event)
         play_with_fallback("voicebarf/event/title/#{event.title_id_hash}.wav",
-                           'voicebarf/generic/unnamed-event')
+                           'voicebarf/generic/unknown-event')
     end
 
     def play_event_subtitle(event)
@@ -79,7 +79,7 @@ methods_for :dialplan do
                 sleep 0.3
             end
             play_with_fallback("voicebarf/speaker/#{person.id_hash}.wav",
-                               'voicebarf/generic/unnamed-person')
+                               'voicebarf/generic/unknown-person')
         end
     end
 

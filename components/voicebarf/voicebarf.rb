@@ -37,7 +37,7 @@ methods_for :dialplan do
         end
     end
 
-    def play_event(event, has_started = false)
+    def play_event(event, has_started = false, dtmf = 0)
         #   talk.title, talk.subtitle by talk.speakers started at time
         #   in lecture hall x
         #   To rate the talk "in lecture hall 1", press 1 ...
@@ -55,6 +55,17 @@ methods_for :dialplan do
         end
         play_event_time event
         play_event_room event
+        if ! has_started then
+            play_input_reminder(event, dtmf)
+        end
+    end
+
+    def play_input_reminder(event, dtmf)
+        remind_input = input(1, :timeout => 2.seconds,
+                             :play => [ 'voicebarf/generic/to-be-reminded', 'voicebarf/generic/press', 'voicebarf/generic/numbers/' + '%02d' % dtmf ])
+        if remind_input.to_i == dtmf then
+            ahn_log.voicebarf.debug "Creating reminder for event #{event.id}"
+        end
     end
 
     def play_event_title(event)
@@ -90,7 +101,6 @@ methods_for :dialplan do
             then
             play file_without_extension
         else
-            # TODO record fallback files
             ahn_log.voicebarf.warn "falling back for file #{file} to #{fallback}"
             play fallback
         end
@@ -112,7 +122,6 @@ methods_for :dialplan do
         else
             # hour minute am/pm
             play "voicebarf/generic/time/hours/#{hour_corrected}"
-            # TODO record 'something'
             play_with_fallback("voicebarf/generic/time/minutes/#{minutes}.wav",
                                'voicebarf/generic/time/minutes/something')
             play "voicebarf/generic/time/#{am_pm}"

@@ -13,8 +13,10 @@ talks_now {
 
     # Talks currently running
     # find matching talks and iterate over them
+    dtmf = 1
     COMPONENTS.voicebarf['pentabarf'].current_block(time).each do |event|
-        play_event(event, true)
+        play_event(event, true, dtmf)
+        dtmf = dtmf +1
     end
     sleep 1
     +upcoming_talks
@@ -29,8 +31,10 @@ upcoming_talks {
     #   talk.title, talk.subtitle by talk.speakers starting at time in lecture hall x
     #   Press 1/2/3 to be reminded 5 minutes before the talk.
     # find next matching block and iterate over the talks (until user hangs up or fahrplan is empty) ...
+    dtmf = 1
     COMPONENTS.voicebarf['pentabarf'].upcoming_block(time).each do |event|
-        play_event(event)
+        play_event(event, false, dtmf)
+        dtmf = dtmf + 1 
     end
 }
 

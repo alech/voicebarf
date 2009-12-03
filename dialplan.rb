@@ -14,7 +14,7 @@ talks_now {
     # Talks currently running
     # find matching talks and iterate over them
     COMPONENTS.voicebarf['pentabarf'].current_block(time).each do |event|
-        play_event(event)
+        play_event(event, true)
     end
     sleep 1
     +upcoming_talks

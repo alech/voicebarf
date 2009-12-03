@@ -37,7 +37,7 @@ methods_for :dialplan do
         end
     end
 
-    def play_event(event)
+    def play_event(event, has_started = false)
         #   talk.title, talk.subtitle by talk.speakers started at time
         #   in lecture hall x
         #   To rate the talk "in lecture hall 1", press 1 ...
@@ -48,7 +48,11 @@ methods_for :dialplan do
         play_event_subtitle event
         play 'voicebarf/generic/by'
         play_event_persons event
-        play 'voicebarf/generic/starting-at' # TODO record 'started at'
+        if has_started then
+            play 'voicebarf/generic/started-at'
+        else
+            play 'voicebarf/generic/starting-at'
+        end
         play_event_time event
     end
 

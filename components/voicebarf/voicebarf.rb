@@ -54,6 +54,7 @@ methods_for :dialplan do
             play 'voicebarf/generic/starting-at'
         end
         play_event_time event
+        play_event_room event
     end
 
     def play_event_title(event)
@@ -116,6 +117,10 @@ methods_for :dialplan do
                                'voicebarf/generic/time/minutes/something')
             play "voicebarf/generic/time/#{am_pm}"
         end 
+    end
+
+    def play_event_room(event)
+        play "voicebarf/room/#{event.room}"
     end
 
     def get_time

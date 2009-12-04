@@ -64,7 +64,15 @@ methods_for :dialplan do
         remind_input = input(1, :timeout => 2.seconds,
                              :play => [ 'voicebarf/generic/to-be-reminded', 'voicebarf/generic/press', 'voicebarf/generic/numbers/' + '%02d' % dtmf ])
         if remind_input.to_i == dtmf then
-            ahn_log.voicebarf.debug "Creating reminder for event #{event.id}"
+            ahn_log.voicebarf.debug "Creating reminder for event #{event.inspect}"
+            ::Reminder.create(:phonenumber => callerid, 
+                              :event_id   => event.id,
+                              :done       => false,
+                              :time       => (event.start - 5*60).strftime('%Y%m%d%H%M%S'))
+            play 'voicebarf/generic/thank-you'
+            play 'voicebarf/generic/reminder/we-will-call-you-to-remind-you-of'
+            play_event_title event
+            play 'voicebarf/generic/reminder/five-minutes-before-it-starts'
         end
     end
 

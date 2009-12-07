@@ -76,6 +76,11 @@ methods_for :dialplan do
         end
     end
 
+    def call_and_play_reminder(reminder)
+        call_into_context(reminders_protocol + '/' + reminder.phonenumber + '@' + reminders_accountname,
+                'notification_incoming', {:variables => {:event_id => event.id, :callee => callerid}})
+    end
+
     def play_event_title(event)
         play_with_fallback("voicebarf/event/title/#{event.title_id_hash}.wav",
                            'voicebarf/generic/unknown-event')

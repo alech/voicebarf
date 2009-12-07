@@ -42,7 +42,6 @@ upcoming_talks {
 # This is ugly, really, but currently, there is no other way.
 notification_incoming {
     event_id = get_variable('event_id')
-    reminder_id = get_variable('reminder_id')
     callee = get_variable('callee')
 
     # Get event.

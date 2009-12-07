@@ -18,6 +18,10 @@ end
 Adhearsion::Configuration.configure do |config|
   config.logging :level => :debug
   config.enable_asterisk
+  voicebarf_cfg = File.open('components/voicebarf/voicebarf.yml') { |f| YAML::load(f) }
+  config.asterisk.enable_ami :host     => voicebarf_cfg['ami']['host'],
+                             :username => voicebarf_cfg['ami']['username'],
+                             :password => voicebarf_cfg['ami']['password'],
+                             :events   => true
 end
-
 Adhearsion::Initializer.start_from_init_file(__FILE__, File.dirname(__FILE__) + "/..")

@@ -38,6 +38,31 @@ upcoming_talks {
     end
 }
 
+# This context is entered when a user is called back from the system.
+# This is ugly, really, but currently, there is no other way.
+notification_incoming {
+    event_id = get_variable('event_id')
+    reminder_id = get_variable('reminder_id')
+    callee = get_variable('callee')
+
+    # Get event.
+    events = COMPONENTS.voicebarf['pentabarf']
+    event = events.select do |e| e.id == event_id end
+
+    # Wait for phone to settle ;-)
+    sleep 0.5
+
+    # Play the actual announcement
+    play 'voicebarf/generic/reminder/hello-the-talk'
+    play_event_title event
+    play 'voicebarf/generic/reminder/starts-in-five-minutes'
+    play_event_room event
+
+    # Mark call as done
+    reminder = ::Reminder.find(:first, :conditions => "phonenumber = ? AND event_id = ?", callee, event_id)
+    reminder.done = true
+}
+
 rate {
     # maybe no context, but a method?
     # should receive @id set to the talk's ID

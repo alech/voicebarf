@@ -58,7 +58,7 @@ notification_incoming {
     play_event_room event
 
     # Mark call as done
-    reminder = ::Reminder.find(:first, :conditions => "phonenumber = ? AND event_id = ?", callee, event_id)
+    reminder = ::Reminder.find(:first, :conditions => [ "phonenumber = ? AND event_id = ?", callee, event_id ])
     reminder.done = true
 }
 

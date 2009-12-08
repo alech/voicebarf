@@ -41,8 +41,12 @@ upcoming_talks {
 # This context is entered when a user is called back from the system.
 # This is ugly, really, but currently, there is no other way.
 notification_incoming {
-    event_id = get_variable('event_id')
-    callee = get_variable('callee')
+    # Get reminder
+    reminder_id = get_variable('reminder_id')
+    reminder = ::Reminder.find(reminder_id.to_i)
+
+    event_id = reminder.event_id
+    callee = reminder.phonenumber
 
     # Get event.
     events = COMPONENTS.voicebarf['pentabarf'].events
@@ -56,11 +60,6 @@ notification_incoming {
     play_event_title event
     play 'voicebarf/generic/reminder/starts-in-five-minutes'
     play_event_room event
-
-    # Mark call as done
-    reminder = ::Reminder.find(:first, :conditions => [ "phonenumber = ? AND event_id = ?", callee, event_id ])
-    reminder.done = true
-    reminder.save!
 }
 
 rate {

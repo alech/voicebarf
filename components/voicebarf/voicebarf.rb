@@ -32,21 +32,16 @@ initialization do
             reminders.each do |reminder|
                 puts "Now calling #{reminder.phonenumber} (#{reminder})"
                 begin
+                    # TODO: add retries here
                     VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
                             'notification_incoming', {:variables => {:reminder_id => reminder.id}})
                 rescue Exception=>e
                     puts "Error: #{e}"
                     next
                 end
-                # Mark as true here; although calling might have
-                # failed, five minutes from here it's too late anyway.
-                # (ugly)
-                reminder = ::Reminder.find(:first, :conditions => {
-                    :done => false,
-                    :time => reminder.time,
-                    :phonenumber => reminder.phonenumber,
-                    :event_id => reminder.event_id
-                 })
+
+                # Mark as done here, and let adhearsion/asterisk
+                # handle the 'try again' foobar.
                 reminder.done = true
                 reminder.save!
             end

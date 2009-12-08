@@ -48,11 +48,6 @@ initialization do
             sleep 5
         end
     end
-
-::Reminder.create(:phonenumber => '23', 
-	:event_id   => 3622,
-	:done       => false,
-	:time       => Time.now.to_i + 40)
 end
 
 methods_for :dialplan do

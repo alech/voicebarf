@@ -22,6 +22,42 @@ initialization do
 
     ActiveRecord::Base.establish_connection(db_config)
     ActiveRecord::Base.logger = Logger.new(STDERR)
+
+    COMPONENTS.voicebarf['reminderthread'] = Thread.new do
+        # Wait for system to settle
+        sleep 5
+        while true do
+            reminders = ::Reminder.find(:all, :conditions => \
+                    ["done = ? AND time <= ?", false, Time.now.to_i])
+            reminders.each do |reminder|
+                puts "Now calling #{reminder.phonenumber} (#{reminder})"
+                begin
+                    VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
+                            'notification_incoming', {:variables => {:event_id => reminder.event_id, :callee => reminder.phonenumber}})
+                rescue Exception=>e
+                    puts "Error: #{e}"
+                    next
+                end
+                # Mark as true here; although calling might have
+                # failed, five minutes from here it's too late anyway.
+                # (ugly)
+                reminder = ::Reminder.find(:first, :conditions => {
+                    :done => false,
+                    :time => reminder.time,
+                    :phonenumber => reminder.phonenumber,
+                    :event_id => reminder.event_id
+                 })
+                reminder.done = true
+                reminder.save!
+            end
+            sleep 5
+        end
+    end
+
+::Reminder.create(:phonenumber => '23', 
+	:event_id   => 3622,
+	:done       => false,
+	:time       => Time.now.to_i + 40)
 end
 
 methods_for :dialplan do
@@ -74,11 +110,6 @@ methods_for :dialplan do
             play_event_title event
             play 'voicebarf/generic/reminder/five-minutes-before-it-starts'
         end
-    end
-
-    def call_and_play_reminder(reminder)
-        call_into_context(reminders_protocol + '/' + reminder.phonenumber + '@' + reminders_accountname,
-                'notification_incoming', {:variables => {:event_id => event.id, :callee => callerid}})
     end
 
     def play_event_title(event)

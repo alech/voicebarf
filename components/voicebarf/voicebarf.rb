@@ -94,7 +94,7 @@ methods_for :dialplan do
             ::Reminder.create(:phonenumber => callerid, 
                               :event_id   => event.id,
                               :done       => false,
-                              :time       => (event.start - 5*60).strftime('%Y%m%d%H%M%S'))
+                              :time       => (event.start - 5*60).to_i)
             play 'voicebarf/generic/thank-you'
             play 'voicebarf/generic/reminder/we-will-call-you-to-remind-you-of'
             play_event_title event

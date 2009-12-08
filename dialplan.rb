@@ -1,4 +1,4 @@
-adhearsion {
+default {
     sleep 0.5
     # record caller in the database
     ::Call.create(:caller_id => callerid, 
@@ -45,8 +45,8 @@ notification_incoming {
     callee = get_variable('callee')
 
     # Get event.
-    events = COMPONENTS.voicebarf['pentabarf']
-    event = events.select do |e| e.id == event_id end
+    events = COMPONENTS.voicebarf['pentabarf'].events
+    event = events.find do |e| e.id == event_id end
 
     # Wait for phone to settle ;-)
     sleep 0.5

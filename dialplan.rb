@@ -60,6 +60,7 @@ notification_incoming {
     # Mark call as done
     reminder = ::Reminder.find(:first, :conditions => [ "phonenumber = ? AND event_id = ?", callee, event_id ])
     reminder.done = true
+    reminder.save!
 }
 
 rate {
@@ -87,3 +88,5 @@ remind {
     # Save reminder in database
     # have a different script that calls people to remind them of the talk
 }
+
+# vim:set tabstop=4 expandtab textwidth=1024 shiftwidth=4

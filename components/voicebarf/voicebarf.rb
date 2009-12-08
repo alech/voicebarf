@@ -33,7 +33,7 @@ initialization do
                 puts "Now calling #{reminder.phonenumber} (#{reminder})"
                 begin
                     VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
-                            'notification_incoming', {:variables => {:event_id => reminder.event_id, :callee => reminder.phonenumber}})
+                            'notification_incoming', {:variables => {:reminder_id => reminder.id}})
                 rescue Exception=>e
                     puts "Error: #{e}"
                     next
@@ -189,3 +189,5 @@ methods_for :dialplan do
         time
     end
 end
+
+# vim:set tabstop=4 expandtab textwidth=1024 shiftwidth=4

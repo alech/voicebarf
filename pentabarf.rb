@@ -91,6 +91,56 @@ module Pentabarf
             end
             result
         end
+        
+        def upcoming_blocks(date = Time.now)
+            blocks = []
+            begin
+                current = []
+                @rooms.each do |room|
+                    evts = @events.select do |e|
+                        (e.room == room) && (e.start >= date)
+                    end
+                    if evts.size >= 1 then
+                        current.push evts.first
+                    end
+                end
+                # put all the events that start at the same (minimal)
+                # time in the block, the rest in skipped
+                min_current = min_time(current, date)
+                block, skipped = current.partition do |c|
+                    c.start == min_current
+                end
+                blocks.push block if block.size > 0
+                # find the nearest start date for the next event
+                min_current = min_time(skipped, min_current)
+                # min_current is the correct next date, if
+                # it is earlier than the end time of the
+                # earliest ending talk in the block ...
+                min_end_evt = block.sort { |x,y| x.end <=> y.end }.first
+                if min_end_evt then
+                    if min_current < min_end_evt.end then
+                        date = min_current
+                    else
+                        date = min_end_evt.end
+                    end
+                else
+                    date = min_current
+                end
+            end until block.size == 0 && skipped.size == 0
+            blocks
+        end
+
+        private
+        def min_time(event_collection, curr_date)
+            case event_collection.size
+            when 0 then
+                curr_date + 1 # empty array, just advance by 1 second
+            when 1 then
+                event_collection.first.start
+            else
+                event_collection.sort { |x,y| x.start <=> y.start }.first.start
+            end
+        end
     end
     
     class Event

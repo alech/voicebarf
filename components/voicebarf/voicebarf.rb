@@ -31,13 +31,13 @@ initialization do
                 reminders = ::Reminder.find(:all, :conditions => \
                         ["done = ? AND time <= ?", false, Time.now.to_i])
                 reminders.each do |reminder|
-                    puts "Now calling #{reminder.phonenumber} (#{reminder})"
+                    ahn_log.voicebarf.debug "Now calling #{reminder.phonenumber} (#{reminder})"
                     begin
                         # TODO: add retries here
                         VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
                                 'notification_incoming', {:variables => {:reminder_id => reminder.id}})
                     rescue Exception=>e
-                        puts "Error: #{e}"
+                        ahn_log.voicebarf.error "Error calling #{reminder.phonenumber}: #{e}"
                         next
                     end
 
@@ -88,8 +88,6 @@ methods_for :dialplan do
         #   in lecture hall x
         #   To rate the talk "in lecture hall 1", press 1 ...
         # For earlier talks, press 0
-        #puts event.inspect
-        #puts event.to_filename('wav')
         play_event_title event
         play_event_subtitle event
         play 'voicebarf/generic/by'

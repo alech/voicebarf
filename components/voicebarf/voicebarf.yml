@@ -4,6 +4,7 @@ database:
     adapter: sqlite3
     database: reminders.sqlite
 debug: false
+reminders: true
 asterisk_sounds: /usr/share/asterisk/sounds/
 pentabarf_xml_uri: http://events.ccc.de/congress/2009/Fahrplan/schedule.en.xml
 pentabarf_xml_file: schedule.en.xml

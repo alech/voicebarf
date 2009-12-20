@@ -23,29 +23,31 @@ initialization do
     ActiveRecord::Base.establish_connection(db_config)
     ActiveRecord::Base.logger = Logger.new(STDERR)
 
-    COMPONENTS.voicebarf['reminderthread'] = Thread.new do
-        # Wait for system to settle
-        sleep 5
-        while true do
-            reminders = ::Reminder.find(:all, :conditions => \
-                    ["done = ? AND time <= ?", false, Time.now.to_i])
-            reminders.each do |reminder|
-                puts "Now calling #{reminder.phonenumber} (#{reminder})"
-                begin
-                    # TODO: add retries here
-                    VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
-                            'notification_incoming', {:variables => {:reminder_id => reminder.id}})
-                rescue Exception=>e
-                    puts "Error: #{e}"
-                    next
-                end
-
-                # Mark as done here, and let adhearsion/asterisk
-                # handle the 'try again' foobar.
-                reminder.done = true
-                reminder.save!
-            end
+    if COMPONENTS.voicebarf['reminders'] then
+        COMPONENTS.voicebarf['reminderthread'] = Thread.new do
+            # Wait for system to settle
             sleep 5
+            while true do
+                reminders = ::Reminder.find(:all, :conditions => \
+                        ["done = ? AND time <= ?", false, Time.now.to_i])
+                reminders.each do |reminder|
+                    puts "Now calling #{reminder.phonenumber} (#{reminder})"
+                    begin
+                        # TODO: add retries here
+                        VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
+                                'notification_incoming', {:variables => {:reminder_id => reminder.id}})
+                    rescue Exception=>e
+                        puts "Error: #{e}"
+                        next
+                    end
+
+                    # Mark as done here, and let adhearsion/asterisk
+                    # handle the 'try again' foobar.
+                    reminder.done = true
+                    reminder.save!
+                end
+                sleep 5
+            end
         end
     end
 
@@ -99,7 +101,7 @@ methods_for :dialplan do
         end
         play_event_time event
         play_event_room event
-        if ! has_started then
+        if ! has_started && COMPONENTS.voicebarf['reminders'] then
             play_input_reminder(event)
         end
     end

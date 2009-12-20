@@ -48,6 +48,24 @@ initialization do
             sleep 5
         end
     end
+
+    # update the Pentabarf::Conference object regularly, as its content
+    # might change during the conference (regularly happens at Chaos
+    # Communication Congress ;-)
+    COMPONENTS.voicebarf['scheduleupdatethread'] = Thread.new do
+        while true do
+            sleep 60
+            ahn_log.voicebarf.debug "Trying to update the schedule"
+            begin
+                COMPONENTS.voicebarf['pentabarf'] = Pentabarf::Conference.new(
+                    :uri      => COMPONENTS.voicebarf['pentabarf_xml_uri']
+                )
+                ahn_log.voicebarf.debug "Successfully updated the schedule"
+            rescue => ex
+                ahn_log.voicebarf.error "Something went wrong during the update of the schedule: #{ex.class}: #{ex.message}"
+            end
+        end
+    end
 end
 
 methods_for :dialplan do

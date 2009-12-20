@@ -1,0 +1,5 @@
+---
+ami:
+    host: 127.0.0.1
+    username: adhearsion
+    password: your_ami_password_here

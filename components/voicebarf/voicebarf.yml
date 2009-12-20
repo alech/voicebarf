@@ -9,10 +9,6 @@ pentabarf_xml_uri: http://events.ccc.de/congress/2009/Fahrplan/schedule.en.xml
 pentabarf_xml_file: schedule.en.xml
 reminders_protocol: SIP
 reminders_accountname: eventphone
-ami:
-    host: 127.0.0.1
-    username: adhearsion
-    password: gridmakabrahspri2.0
 dtmf_mapping:
     Saal1: 1
     Saal2: 2

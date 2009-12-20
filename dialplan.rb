@@ -61,30 +61,4 @@ notification_incoming {
     play_event_room event
 }
 
-rate {
-    # maybe no context, but a method?
-    # should receive @id set to the talk's ID
-    # 
-    # The rating is divided in the following categories:
-    # iterate over categories (TODO: defined where, they are probably not in
-    # the Pentabarf XML?)
-    # Please rate from 1 to 5 where 5 is best and 1 is worst.
-    # iterate over categories:
-    #   Please enter your rating for the category "..."
-    # Thank you.
-    # You now have the chance to record an audio comment after the tone. Alternatively, you can just hang up now.
-    # save audio file (TODO: discuss with pentabarf team/Sven if it can be uploaded to pentabarf directly)
-    # rate talk on Barf (add a comment that this is a voicebarf rating and add the timestamp)
-}
-
-remind {
-    # maybe no context, but a method?
-    # should receive @id set to the talk's ID
-    # 
-    # TODO record "We will call you to remind you of talk.title at time."
-    # TODO record "The talk talk.title starts in 5 minutes in talk.room"
-    # Save reminder in database
-    # have a different script that calls people to remind them of the talk
-}
-
 # vim:set tabstop=4 expandtab textwidth=1024 shiftwidth=4

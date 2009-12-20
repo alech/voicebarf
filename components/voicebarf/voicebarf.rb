@@ -10,6 +10,15 @@ end
 class ::Call < ActiveRecord::Base
 end
 
+class ::Rating < ActiveRecord::Base
+end
+
+class ::SingleRating < ActiveRecord::Base
+end
+
+class ::AudioRating < ActiveRecord::Base
+end
+
 initialization do
     # initialize Pentabarf object
     COMPONENTS.voicebarf['pentabarf'] = Pentabarf::Conference.new(
@@ -102,8 +111,52 @@ methods_for :dialplan do
         if ! has_started && COMPONENTS.voicebarf['reminders'] then
             play_input_reminder(event)
         end
+        if has_started && COMPONENTS.voicebarf['ratings'] then
+            play_input_ratings(event)
+        end
     end
 
+    def play_input_ratings(event)
+        dtmf = COMPONENTS.voicebarf['dtmf_mapping'][event.room]
+        ahn_log.voicebarf.debug "DTMF: #{dtmf}"
+        if ! dtmf then
+            ahn_log.voicebarf.warn "missing DTMF mapping for #{event.room}, using 1"
+            dtmf = 1
+        end
+        ratings_input = input(1, :timeout => 2.seconds,
+                             :play => [ 'voicebarf/generic/to-rate-the-talk', 'voicebarf/generic/press', 'voicebarf/generic/numbers/' + '%02d' % dtmf ])
+        if ratings_input.to_i == dtmf then
+            ahn_log.voicebarf.debug "Creating rating for event #{event.title}"
+            rating = ::Rating.create(:time => Time.now.to_i)
+            ahn_log.voicebarf.debug "rating: #{rating.inspect}"
+            play 'voicebarf/generic/the-rating-is-divided'
+            COMPONENTS.voicebarf['rating_categories'].each do |cat|
+                play 'voicebarf/generic/categories/' + cat
+                sleep 0.5
+            end
+            play 'voicebarf/generic/please-rate-from'
+            COMPONENTS.voicebarf['rating_categories'].each do |cat|
+                rating_input = input(1, :timeout => 5.seconds,
+                                     :play => [ 'voicebarf/generic/please-enter-your-rating-for-the-category', "voicebarf/generic/categories/#{cat}" ])
+                if rating_input.to_i >= 1 && rating_input.to_i <= 5 then
+                    ::SingleRating.create(:rating_id => rating.id,
+                                          :category  => cat,
+                                          :rating    => rating_input.to_i)
+                end
+                sleep 0.5
+            end
+            play 'voicebarf/generic/thank-you'
+            sleep 0.5
+            play 'voicebarf/generic/you-now-have-the-chance-to-record'
+            sleep 1
+            play 'beep'
+            # TODO - copy the file somewhere safe? alternatively configure
+            # Asterisks not to put it in /tmp
+            filename = record :silence => 5, :maxduration => 300
+            ::AudioRating.create(:rating_id => rating.id,
+                                 :filename  => filename)
+        end
+    end
     def play_input_reminder(event)
         dtmf = COMPONENTS.voicebarf['dtmf_mapping'][event.room]
         ahn_log.voicebarf.debug "DTMF: #{dtmf}"

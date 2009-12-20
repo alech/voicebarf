@@ -63,7 +63,7 @@ methods_for :dialplan do
         end
     end
 
-    def play_event(event, has_started = false, dtmf = 0)
+    def play_event(event, has_started = false)
         #   talk.title, talk.subtitle by talk.speakers started at time
         #   in lecture hall x
         #   To rate the talk "in lecture hall 1", press 1 ...
@@ -82,11 +82,17 @@ methods_for :dialplan do
         play_event_time event
         play_event_room event
         if ! has_started then
-            play_input_reminder(event, dtmf)
+            play_input_reminder(event)
         end
     end
 
-    def play_input_reminder(event, dtmf)
+    def play_input_reminder(event)
+        dtmf = COMPONENTS.voicebarf['dtmf_mapping'][event.room]
+        ahn_log.voicebarf.debug "DTMF: #{dtmf}"
+        if ! dtmf then
+            ahn_log.voicebarf.warn "missing DTMF mapping for #{event.room}, using 1"
+            dtmf = 1
+        end
         remind_input = input(1, :timeout => 2.seconds,
                              :play => [ 'voicebarf/generic/to-be-reminded', 'voicebarf/generic/press', 'voicebarf/generic/numbers/' + '%02d' % dtmf ])
         if remind_input.to_i == dtmf then

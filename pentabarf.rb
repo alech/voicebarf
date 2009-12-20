@@ -77,21 +77,6 @@ module Pentabarf
             result
         end
 
-        def upcoming_block(date = Time.now, max_date = date + 60*60*5)
-            result = []
-            @rooms.each do |room|
-                current = @events.select do |e|
-                    (e.room == room) &&
-                    (e.start > date) &&
-                    (e.start <= max_date)
-                end
-                if current.size >= 1 then
-                    result.push current.first
-                end
-            end
-            result
-        end
-        
         def upcoming_blocks(date = Time.now)
             blocks = []
             begin

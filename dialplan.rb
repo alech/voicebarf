@@ -1,4 +1,4 @@
-default {
+hoehlenstatus {
     sleep 0.5
     # record caller in the database
     ::Call.create(:caller_id => callerid, 
@@ -49,7 +49,12 @@ notification_incoming {
 
     # Get event.
     events = COMPONENTS.voicebarf['pentabarf'].events
-    event = events.find do |e| e.id == event_id end
+    event = events.find do |e| (e.id == event_id) or (e.id == "#{event_id}") end
+
+#    ahn_log.voicebarf.debug 'events: ' + events.inspect
+#    ahn_log.voicebarf.debug event_id
+#    ahn_log.voicebarf.debug events.first.id.inspect
+
 
     # Wait for phone to settle ;-)
     sleep 0.5

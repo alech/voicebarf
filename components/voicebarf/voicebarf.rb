@@ -43,7 +43,7 @@ initialization do
                     ahn_log.voicebarf.debug "Now calling #{reminder.phonenumber} (#{reminder})"
                     begin
                         # TODO: add retries here
-                        VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
+                        VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/' + reminder.phonenumber + "@" + COMPONENTS.voicebarf['reminders_accountname'],
                                 'notification_incoming', {:variables => {:reminder_id => reminder.id}})
                     rescue Exception=>e
                         ahn_log.voicebarf.error "Error calling #{reminder.phonenumber}: #{e}"

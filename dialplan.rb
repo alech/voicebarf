@@ -7,6 +7,15 @@ hoehlenstatus {
     +talks_now
 }
 
+hoehlenstatus_soon {
+    sleep 0.5
+    # record caller in the database
+    ::Call.create(:caller_id => callerid, 
+                  :time => Time.now.strftime('%Y%m%d%H%M%S'))
+    play_conferencename
+    +upcoming_talks
+}
+
 talks_now {
     play 'voicebarf/generic/talks-currently-running'
     time = get_time

@@ -35,7 +35,7 @@ initialization do
     if COMPONENTS.voicebarf['reminders'] then
         COMPONENTS.voicebarf['reminderthread'] = Thread.new do
             # Wait for system to settle
-            sleep 5
+            sleep 20
             while true do
                 reminders = ::Reminder.find(:all, :conditions => \
                         ["done = ? AND time <= ?", false, Time.now.to_i])
@@ -55,7 +55,7 @@ initialization do
                     reminder.done = true
                     reminder.save!
                 end
-                sleep 5
+                sleep 20
             end
         end
     end

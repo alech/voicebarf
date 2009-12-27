@@ -152,9 +152,10 @@ methods_for :dialplan do
             play 'beep'
             # TODO - copy the file somewhere safe? alternatively configure
             # Asterisks not to put it in /tmp
-            filename = record :silence => 5, :maxduration => 300
+            filename = "/home/alech/audio_comments/#{callerid}.#{Time.now.to_i}"
             ::AudioRating.create(:rating_id => rating.id,
                                  :filename  => filename)
+            record filename, :silence => 5, :maxduration => 300
         end
     end
     def play_input_reminder(event)

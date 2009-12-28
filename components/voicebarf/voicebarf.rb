@@ -35,7 +35,7 @@ initialization do
     if COMPONENTS.voicebarf['reminders'] then
         COMPONENTS.voicebarf['reminderthread'] = Thread.new do
             # Wait for system to settle
-            sleep 5
+            sleep 20
             while true do
                 reminders = ::Reminder.find(:all, :conditions => \
                         ["done = ? AND time <= ?", false, Time.now.to_i])
@@ -43,7 +43,7 @@ initialization do
                     ahn_log.voicebarf.debug "Now calling #{reminder.phonenumber} (#{reminder})"
                     begin
                         # TODO: add retries here
-                        VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/hctest',
+                        VoIP::Asterisk.manager_interface.call_into_context(COMPONENTS.voicebarf['reminders_protocol'] + '/' + reminder.phonenumber + "@" + COMPONENTS.voicebarf['reminders_accountname'],
                                 'notification_incoming', {:variables => {:reminder_id => reminder.id}})
                     rescue Exception=>e
                         ahn_log.voicebarf.error "Error calling #{reminder.phonenumber}: #{e}"
@@ -55,7 +55,7 @@ initialization do
                     reminder.done = true
                     reminder.save!
                 end
-                sleep 5
+                sleep 20
             end
         end
     end
@@ -152,9 +152,10 @@ methods_for :dialplan do
             play 'beep'
             # TODO - copy the file somewhere safe? alternatively configure
             # Asterisks not to put it in /tmp
-            filename = record :silence => 5, :maxduration => 300
+            filename = "/home/alech/audio_comments/#{callerid}.#{Time.now.to_i}"
             ::AudioRating.create(:rating_id => rating.id,
                                  :filename  => filename)
+            record filename, :silence => 5, :maxduration => 300
         end
     end
     def play_input_reminder(event)

@@ -201,7 +201,7 @@ methods_for :dialplan do
                 play 'voicebarf/generic/and'
                 sleep 0.3
             end
-            play_with_fallback("voicebarf/speaker/#{person.id_hash}.wav",
+            play_with_fallback("voicebarf/speaker/#{person.id_hash}_#{event.id}.wav",
                                'voicebarf/generic/unknown-person')
         end
     end

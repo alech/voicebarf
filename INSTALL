@@ -1,0 +1,6 @@
+- git clone git://git.alech.de/voicebarf.git
+- Edit components/voicebarf/ami.yml to match your /etc/asterisk/manager.conf
+- mkdir /usr/share/asterisks/sounds/voicebarf
+  Link generic to voicebarf/voice/generic
+  Create audio content for conference/ event/ room/ and speaker/ directories
+- sqlite3 reminders.sqlite < setup.sqlite (gem install sqlite3-ruby)

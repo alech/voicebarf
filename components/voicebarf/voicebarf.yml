@@ -13,7 +13,7 @@ rating_categories:
 - presentation_quality
 - audience_involvement
 asterisk_sounds: /usr/share/asterisk/sounds/
-pentabarf_xml_uri: http://events.ccc.de/congress/2009/Fahrplan/schedule.en.xml
+pentabarf_xml_uri: http://events.ccc.de/congress/2010/Fahrplan/schedule.en.xml
 pentabarf_xml_file: schedule.en.xml
 reminders_protocol: SIP
 reminders_accountname: "8255"

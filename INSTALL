@@ -3,4 +3,4 @@
 - mkdir /usr/share/asterisks/sounds/voicebarf
   Link generic to voicebarf/voice/generic
   Create audio content for conference/ event/ room/ and speaker/ directories
-- sqlite3 reminders.sqlite < setup.sqlite (gem install sqlite3-ruby)
+- sqlite reminders.sqlite < setup.sqlite (gem install sqlite3-ruby)
